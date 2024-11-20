@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BG3 Save Backup")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DHA")]
+[assembly: AssemblyCompany("Sapph Tools")]
 [assembly: AssemblyProduct("BG3 Save Backup")]
-[assembly: AssemblyCopyright("Copyright © DHA 2024")]
+[assembly: AssemblyCopyright("Copyright © Nicholas Gibson 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
