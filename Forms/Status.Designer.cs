@@ -1,4 +1,4 @@
-﻿namespace BG3_Save_Backup.Forms {
+namespace BG3_Save_Backup.Forms {
     partial class Status {
         /// <summary>
         /// Required designer variable.
@@ -39,6 +39,7 @@
             this.SavesDgv = new System.Windows.Forms.DataGridView();
             this.SavePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastWriteTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.HonorOnly = new System.Windows.Forms.CheckBox();
             this.TrayMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).BeginInit();
             this.SuspendLayout();
@@ -168,11 +169,23 @@
             this.LastWriteTime.Name = "LastWriteTime";
             this.LastWriteTime.ReadOnly = true;
             // 
+            // HonorOnly
+            // 
+            this.HonorOnly.AutoSize = true;
+            this.HonorOnly.Location = new System.Drawing.Point(543, 157);
+            this.HonorOnly.Name = "HonorOnly";
+            this.HonorOnly.Size = new System.Drawing.Size(115, 17);
+            this.HonorOnly.TabIndex = 9;
+            this.HonorOnly.Text = "Honour Mode Only";
+            this.HonorOnly.UseVisualStyleBackColor = true;
+            this.HonorOnly.CheckedChanged += new System.EventHandler(this.HonorOnly_CheckedChanged);
+            // 
             // Status
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 410);
+            this.Controls.Add(this.HonorOnly);
             this.Controls.Add(this.SavesDgv);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.BackupFolderBrowse);
@@ -210,5 +223,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.DataGridViewTextBoxColumn SavePath;
         private System.Windows.Forms.DataGridViewTextBoxColumn LastWriteTime;
+        private System.Windows.Forms.CheckBox HonorOnly;
     }
 }
