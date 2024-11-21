@@ -1,11 +1,7 @@
-﻿using BG3_Save_Backup.Properties;
+using BG3_Save_Backup.Properties;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BG3_Save_Backup.Classes {
     internal class SaveWatcher {
@@ -16,14 +12,15 @@ namespace BG3_Save_Backup.Classes {
         public string LarianPath {
             get {
                 return _savepath;
-            } set {
+            }
+            set {
                 ResetWatcher(value);
                 _savepath = value;
             }
         }
-        public string BackupPath { 
-            get => _backuppath; 
-            set => _backuppath = value; 
+        public string BackupPath {
+            get => _backuppath;
+            set => _backuppath = value;
         }
         public bool Enabled => _enabled;
         public event EventHandler BackupTriggered;
@@ -39,20 +36,21 @@ namespace BG3_Save_Backup.Classes {
                 _enabled = false;
                 return;
             }
-            _watcher = new FileSystemWatcher(newPath);
-            _watcher.NotifyFilter = NotifyFilters.CreationTime
+            _watcher = new FileSystemWatcher(newPath) {
+                NotifyFilter = NotifyFilters.CreationTime
                                   | NotifyFilters.DirectoryName
                                   | NotifyFilters.FileName
                                   | NotifyFilters.LastAccess
-                                  | NotifyFilters.LastWrite;
+                                  | NotifyFilters.LastWrite,
+                EnableRaisingEvents = true
+            };
             _watcher.Created += OnCreated;
             _watcher.Changed += OnChanged;
-            _watcher.EnableRaisingEvents = true;
-            //_watcher.IncludeSubdirectories = true;
             _enabled = true;
         }
         private void OnCreated(object sender, FileSystemEventArgs e) {
             if (!Directory.Exists(e.FullPath)) return;
+            if (Settings.Default.HonorOnly && !e.Name.Contains("_HonourMode")) return;
             string targetPath = Path.Combine(_backuppath, e.Name);
             _ = Directory.CreateDirectory(targetPath);
             if (e.Name.EndsWith("_HonourMode")) {
@@ -61,6 +59,7 @@ namespace BG3_Save_Backup.Classes {
             }
             foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
                 using (var larianSave = WaitForFile(file.FullName)) {
+                    if (larianSave is null) return;
                     var saveName = file.Name;
                     string targetFile = Path.Combine(targetPath, saveName);
                     using (FileStream backupSave = File.Create(targetFile)) {
@@ -72,6 +71,7 @@ namespace BG3_Save_Backup.Classes {
         }
         private void OnChanged(object sender, FileSystemEventArgs e) {
             if (!Directory.Exists(e.FullPath)) return;
+            if (Settings.Default.HonorOnly && !e.Name.Contains("_HonourMode")) return;
             string targetPath = Path.Combine(_backuppath, e.Name);
             _ = Directory.CreateDirectory(targetPath);
             if (e.Name.EndsWith("_HonourMode")) {
@@ -80,6 +80,7 @@ namespace BG3_Save_Backup.Classes {
             }
             foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
                 using (var larianSave = WaitForFile(file.FullName)) {
+                    if (larianSave is null) return;
                     var saveName = file.Name;
                     string targetFile = Path.Combine(targetPath, saveName);
                     using (FileStream backupSave = new FileStream(targetFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite)) {
@@ -96,8 +97,7 @@ namespace BG3_Save_Backup.Classes {
                     fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read);
                     return fs;
                 } catch (IOException) {
-                    if (fs != null)
-                        fs.Dispose();
+                    fs?.Dispose();
                     Thread.Sleep(250);
                 }
             }
