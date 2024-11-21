@@ -32,6 +32,11 @@ namespace BG3_Save_Backup {
             }
         }
         static bool ValidateSettings() {
+            if (_default.UpgradeRequired) {
+                _default.Upgrade();
+                _default.UpgradeRequired = false;
+                _default.Save();
+            }
             if (string.IsNullOrWhiteSpace(_default.LarianSaveLoc) || string.IsNullOrWhiteSpace(_default.BackupSaveLoc))
                 FirstTimeRun();
             if (!Directory.Exists(_default.BackupSaveLoc))
