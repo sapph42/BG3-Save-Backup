@@ -1,4 +1,4 @@
-using BG3_Save_Backup.Properties;
+﻿using BG3_Save_Backup.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,37 +48,49 @@ namespace BG3_Save_Backup.Classes {
             _watcher.Created += OnCreated;
             _watcher.Changed += OnChanged;
             _watcher.EnableRaisingEvents = true;
-            _watcher.IncludeSubdirectories = true;
+            //_watcher.IncludeSubdirectories = true;
             _enabled = true;
         }
         private void OnCreated(object sender, FileSystemEventArgs e) {
-            if (!File.Exists(e.FullPath)) return;
-            using (var larianSave = WaitForFile(e.FullPath)) {
-                var saveName = e.Name;
-                string targetPath = Path.Combine(_backuppath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
+            if (!Directory.Exists(e.FullPath)) return;
+            string targetPath = Path.Combine(_backuppath, e.Name);
+            _ = Directory.CreateDirectory(targetPath);
+            if (e.Name.EndsWith("_HonourMode")) {
+                targetPath = Path.Combine(targetPath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
                 _ = Directory.CreateDirectory(targetPath);
-                string targetFile = Path.Combine(targetPath, e.Name);
-                using (FileStream backupSave = File.Create(targetFile)) {
-                    larianSave.CopyTo(backupSave);
+            }
+            foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
+                using (var larianSave = WaitForFile(file.FullName)) {
+                    var saveName = file.Name;
+                    string targetFile = Path.Combine(targetPath, saveName);
+                    using (FileStream backupSave = File.Create(targetFile)) {
+                        larianSave.CopyTo(backupSave);
+                    }
                 }
             }
             BackupTriggered?.Invoke(this, EventArgs.Empty);
         }
         private void OnChanged(object sender, FileSystemEventArgs e) {
-            if (!File.Exists(e.FullPath)) return;
-            using (var larianSave = WaitForFile(e.FullPath)) {
-                var saveName = e.Name;
-                string targetPath = Path.Combine(_backuppath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
+            if (!Directory.Exists(e.FullPath)) return;
+            string targetPath = Path.Combine(_backuppath, e.Name);
+            _ = Directory.CreateDirectory(targetPath);
+            if (e.Name.EndsWith("_HonourMode")) {
+                targetPath = Path.Combine(targetPath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
                 _ = Directory.CreateDirectory(targetPath);
-                string targetFile = Path.Combine(targetPath, e.Name);
-                using (FileStream backupSave = new FileStream(targetFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite)) {
-                    larianSave.CopyTo(backupSave);
+            }
+            foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
+                using (var larianSave = WaitForFile(file.FullName)) {
+                    var saveName = file.Name;
+                    string targetFile = Path.Combine(targetPath, saveName);
+                    using (FileStream backupSave = new FileStream(targetFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite)) {
+                        larianSave.CopyTo(backupSave);
+                    }
                 }
             }
             BackupTriggered?.Invoke(this, EventArgs.Empty);
         }
         private FileStream WaitForFile(string fullpath) {
-            for (int numTries = 0; numTries < 20; numTries++) {
+            for (int numTries = 0; numTries < 100; numTries++) {
                 FileStream fs = null;
                 try {
                     fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read);
