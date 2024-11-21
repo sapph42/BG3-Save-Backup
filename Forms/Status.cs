@@ -1,12 +1,9 @@
-﻿using BG3_Save_Backup.Properties;
+using BG3_Save_Backup.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.IO;
@@ -20,8 +17,8 @@ namespace BG3_Save_Backup.Forms {
             else
                 Tray.Icon = Resources.ErrorIcon;
             Program.Watcher.BackupTriggered += WatcherTrigger;
+            HonorOnly.Checked = Settings.Default.HonorOnly;
         }
-
         private void Status_Load(object sender, EventArgs e) {
             Hide();
             WindowState = FormWindowState.Minimized;
@@ -29,15 +26,12 @@ namespace BG3_Save_Backup.Forms {
             BackupFolderTextbox.Text = Settings.Default.BackupSaveLoc;
             RefreshDgv();
         }
-
         private void Status_Shown(object sender, EventArgs e) {
             RefreshDgv();
         }
-
         private void WatcherTrigger(object sender, EventArgs e) {
             RefreshDgv();
         }
-
         private void RefreshDgv(IEnumerable<DirectoryInfo> folders = null) {
             if (folders is null)
                 folders = new DirectoryInfo(BackupFolderTextbox.Text)
@@ -46,7 +40,10 @@ namespace BG3_Save_Backup.Forms {
                     .ToList();
             var normalSaves = folders.Where(f => !f.Name.EndsWith("_HonourMode"));
             var honorSaves = folders.Where(f => f.Name.EndsWith("_HonourMode"));
-            folders = normalSaves.ToList();
+            if (HonorOnly.Checked)
+                folders = null;
+            else
+                folders = normalSaves.ToList();
             foreach (var honor in honorSaves) {
                 string save = honor.FullName;
                 var honorSnapshots = new DirectoryInfo(save)
@@ -74,23 +71,16 @@ namespace BG3_Save_Backup.Forms {
                 }
             }
         }
-
-        private void RefreshDgvByInvoke(IEnumerable<string> files) {
-
-        }
-
         private void Status_Resize(object sender, EventArgs e) {
             if (WindowState == FormWindowState.Minimized) {
                 Hide();
             }
         }
-
         private void Tray_DoubleClick(object sender, EventArgs e) {
             RefreshDgv();
             Show();
             WindowState = FormWindowState.Normal;
         }
-
         private void LarianFolderBrowse_Click(object sender, EventArgs e) {
             var dialog = new CommonOpenFileDialog {
                 IsFolderPicker = true,
@@ -105,11 +95,9 @@ namespace BG3_Save_Backup.Forms {
                 Program.Watcher.LarianPath = dialog.FileName;
             }
         }
-
         private void LarianFolderTextbox_DoubleClick(object sender, EventArgs e) {
             LarianFolderBrowse_Click(sender, e);
         }
-
         private void BackupFolderBrowse_Click(object sender, EventArgs e) {
             var dialog = new CommonOpenFileDialog {
                 IsFolderPicker = true,
@@ -126,19 +114,20 @@ namespace BG3_Save_Backup.Forms {
                 Program.Watcher.BackupPath = dialog.FileName;
             }
         }
-
         private void BackupFolderTextbox_DoubleClick(object sender, EventArgs e) {
             BackupFolderBrowse_Click(sender, e);
         }
-
         private void statusToolStripMenuItem_Click(object sender, EventArgs e) {
             RefreshDgv();
             Show();
             WindowState = FormWindowState.Normal;
         }
-
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
             Close();
+        }
+        private void HonorOnly_CheckedChanged(object sender, EventArgs e) {
+            Settings.Default.HonorOnly = HonorOnly.Checked;
+            Settings.Default.Save();
         }
     }
 }
