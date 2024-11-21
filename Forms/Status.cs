@@ -1,4 +1,4 @@
-using BG3_Save_Backup.Properties;
+﻿using BG3_Save_Backup.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -38,23 +38,39 @@ namespace BG3_Save_Backup.Forms {
             RefreshDgv();
         }
 
-        private void RefreshDgv(IEnumerable<string> files = null) {
-            if (files is null)
-                files = new DirectoryInfo(BackupFolderTextbox.Text)
+        private void RefreshDgv(IEnumerable<DirectoryInfo> folders = null) {
+            if (folders is null)
+                folders = new DirectoryInfo(BackupFolderTextbox.Text)
                     .GetDirectories()
                     .OrderByDescending(f => f.LastWriteTime)
-                    .Select(f => f.Name)
-                    .ToList()
-                    .Take(10);
+                    .ToList();
+            var normalSaves = folders.Where(f => !f.Name.EndsWith("_HonourMode"));
+            var honorSaves = folders.Where(f => f.Name.EndsWith("_HonourMode"));
+            folders = normalSaves.ToList();
+            foreach (var honor in honorSaves) {
+                string save = honor.FullName;
+                var honorSnapshots = new DirectoryInfo(save)
+                                            .GetDirectories()
+                                            .OrderByDescending(f => f.LastWriteTime)
+                                            .ToList();
+                folders = folders.Concat(honorSnapshots);
+            }
+            folders.OrderByDescending(f => f.LastWriteTime).ToList().Take(10);
             if (SavesDgv.InvokeRequired) {
                 Action safeRefresh = delegate {
-                    RefreshDgv(files);
+                    RefreshDgv(folders);
                 };
                 SavesDgv.Invoke(safeRefresh);
             } else {
                 SavesDgv.Rows.Clear();
-                foreach (string file in files) {
-                    SavesDgv.Rows.Add(file);
+                foreach (var folder in folders) {
+                    string file = "";
+                    if (folder.FullName.Contains("_HonourMode"))
+                        file = Path.Combine(folder.Parent.Name, folder.Name);
+                    else
+                        file = folder.Name;
+                    SavesDgv.Rows.Add(file, folder.LastWriteTime.ToString("dd MMM yyyy HH:mm:ss"));
+                    SavesDgv.Sort(LastWriteTime, ListSortDirection.Descending);
                 }
             }
         }

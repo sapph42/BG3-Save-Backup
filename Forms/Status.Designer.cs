@@ -26,6 +26,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Status));
             this.Tray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.TrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.LarianFolderTextbox = new System.Windows.Forms.TextBox();
             this.LarianFolderBrowse = new System.Windows.Forms.Button();
@@ -35,11 +38,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.SavesDgv = new System.Windows.Forms.DataGridView();
             this.SavePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.TrayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.statusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).BeginInit();
+            this.LastWriteTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TrayMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).BeginInit();
             this.SuspendLayout();
             // 
             // Tray
@@ -49,6 +50,28 @@
             this.Tray.Text = "BG3 Save Backup";
             this.Tray.Visible = true;
             this.Tray.DoubleClick += new System.EventHandler(this.Tray_DoubleClick);
+            // 
+            // TrayMenu
+            // 
+            this.TrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.TrayMenu.Name = "TrayMenu";
+            this.TrayMenu.Size = new System.Drawing.Size(107, 48);
+            // 
+            // statusToolStripMenuItem
+            // 
+            this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
+            this.statusToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.statusToolStripMenuItem.Text = "Status";
+            this.statusToolStripMenuItem.Click += new System.EventHandler(this.statusToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -121,7 +144,8 @@
             this.SavesDgv.AllowUserToDeleteRows = false;
             this.SavesDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.SavesDgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.SavePath});
+            this.SavePath,
+            this.LastWriteTime});
             this.SavesDgv.Location = new System.Drawing.Point(15, 177);
             this.SavesDgv.Name = "SavesDgv";
             this.SavesDgv.ReadOnly = true;
@@ -132,32 +156,17 @@
             // 
             this.SavePath.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.SavePath.HeaderText = "Save";
-            this.SavePath.MinimumWidth = 550;
+            this.SavePath.MinimumWidth = 450;
             this.SavePath.Name = "SavePath";
             this.SavePath.ReadOnly = true;
-            this.SavePath.Width = 550;
+            this.SavePath.Width = 450;
             // 
-            // TrayMenu
+            // LastWriteTime
             // 
-            this.TrayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusToolStripMenuItem,
-            this.exitToolStripMenuItem});
-            this.TrayMenu.Name = "TrayMenu";
-            this.TrayMenu.Size = new System.Drawing.Size(107, 48);
-            // 
-            // statusToolStripMenuItem
-            // 
-            this.statusToolStripMenuItem.Name = "statusToolStripMenuItem";
-            this.statusToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.statusToolStripMenuItem.Text = "Status";
-            this.statusToolStripMenuItem.Click += new System.EventHandler(this.statusToolStripMenuItem_Click);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.LastWriteTime.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.LastWriteTime.HeaderText = "LastWriteTime";
+            this.LastWriteTime.Name = "LastWriteTime";
+            this.LastWriteTime.ReadOnly = true;
             // 
             // Status
             // 
@@ -178,8 +187,8 @@
             this.Load += new System.EventHandler(this.Status_Load);
             this.Shown += new System.EventHandler(this.Status_Shown);
             this.Resize += new System.EventHandler(this.Status_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).EndInit();
             this.TrayMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,9 +205,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DataGridView SavesDgv;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SavePath;
         private System.Windows.Forms.ContextMenuStrip TrayMenu;
         private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SavePath;
+        private System.Windows.Forms.DataGridViewTextBoxColumn LastWriteTime;
     }
 }
