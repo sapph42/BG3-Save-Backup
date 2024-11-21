@@ -1,4 +1,4 @@
-﻿using BG3_Save_Backup.Properties;
+using BG3_Save_Backup.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,7 +41,7 @@ namespace BG3_Save_Backup.Forms {
         private void RefreshDgv(IEnumerable<string> files = null) {
             if (files is null)
                 files = new DirectoryInfo(BackupFolderTextbox.Text)
-                    .GetFiles()
+                    .GetDirectories()
                     .OrderByDescending(f => f.LastWriteTime)
                     .Select(f => f.Name)
                     .ToList()
