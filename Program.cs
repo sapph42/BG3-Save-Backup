@@ -1,4 +1,4 @@
-﻿using BG3_Save_Backup.Properties;
+using BG3_Save_Backup.Properties;
 using BG3_Save_Backup.Classes;
 using BG3_Save_Backup.Forms;
 using System;
@@ -21,7 +21,6 @@ namespace BG3_Save_Backup {
             _default.Save();
             return CreateSaveFolder(_default.BackupSaveLoc);
         }
-
         static bool CreateSaveFolder(string path) {
             if (Directory.Exists(path)) return true;
             try {
@@ -43,14 +42,15 @@ namespace BG3_Save_Backup {
                 return CreateSaveFolder(_default.BackupSaveLoc);
             return true;
         }
-
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        static void UnhandledException(object sender, UnhandledExceptionEventArgs args) {
+            Exception e = (Exception)args.ExceptionObject;
+            MessageBox.Show($"Unhandled exception caught:\r\n{e.Message}");
+        }
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
             ValidBackupTarget = ValidateSettings();
             Watcher = new SaveWatcher();
             Application.Run(new Status());
