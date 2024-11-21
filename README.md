@@ -1,0 +1,11 @@
+# BG3 Save Backup
+
+![Screenshot of BG3 Save Backup](https://private-user-images.githubusercontent.com/31635854/388542377-d141f9e9-794f-4715-9743-efaedef9b21a.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzIxOTc3MzgsIm5iZiI6MTczMjE5NzQzOCwicGF0aCI6Ii8zMTYzNTg1NC8zODg1NDIzNzctZDE0MWY5ZTktNzk0Zi00NzE1LTk3NDMtZWZhZWRlZjliMjFhLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDExMjElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQxMTIxVDEzNTcxOFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWMzYTdjYTNlY2RmYTcwZGEwZWY1NmQwNmQ3ZWZmMzVlYTg4MjdjOWYxOTRkMzIyYjM3YWI0Y2U4Zjg4OGJlMmMmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.5I03QWzdjsJXJRlR-RLkQcTz692HM5d2SYlyu0KDWLg)
+
+The BG3 Save Data Location field will default to the standard location. The Backup Location field will default to a new folder in your My Documents folder.
+
+The application can be minimized to the tray.
+
+Standard saves are copied as is (if enabled).
+
+Honour Mode saves are copied to a timestamped subdirectory so there is a snapshot of each save state.
