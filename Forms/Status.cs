@@ -33,24 +33,28 @@ namespace BG3_Save_Backup.Forms {
             RefreshDgv();
         }
         private void RefreshDgv(IEnumerable<DirectoryInfo> folders = null) {
-            if (folders is null)
+            if (folders is null) {
                 folders = new DirectoryInfo(BackupFolderTextbox.Text)
                     .GetDirectories()
                     .OrderByDescending(f => f.LastWriteTime)
                     .ToList();
-            var normalSaves = folders.Where(f => !f.Name.EndsWith("_HonourMode"));
-            var honorSaves = folders.Where(f => f.Name.EndsWith("_HonourMode"));
-            if (HonorOnly.Checked)
-                folders = null;
-            else
-                folders = normalSaves.ToList();
-            foreach (var honor in honorSaves) {
-                string save = honor.FullName;
-                var honorSnapshots = new DirectoryInfo(save)
-                                            .GetDirectories()
-                                            .OrderByDescending(f => f.LastWriteTime)
-                                            .ToList();
-                folders = folders.Concat(honorSnapshots);
+                var normalSaves = folders.Where(f => !f.Name.EndsWith("_HonourMode"));
+                var honorSaves = folders.Where(f => f.Name.EndsWith("_HonourMode"));
+                if (HonorOnly.Checked)
+                    folders = null;
+                else
+                    folders = normalSaves.ToList();
+                foreach (var honor in honorSaves) {
+                    string save = honor.FullName;
+                    var honorSnapshots = new DirectoryInfo(save)
+                                                .GetDirectories()
+                                                .OrderByDescending(f => f.LastWriteTime)
+                                                .ToList();
+                    if (folders is null)
+                        folders = honorSnapshots;
+                    else
+                        folders.AddRange(honorSnapshots);
+                }
             }
             folders.OrderByDescending(f => f.LastWriteTime).ToList().Take(10);
             if (SavesDgv.InvokeRequired) {
