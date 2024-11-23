@@ -40,8 +40,12 @@ namespace BG3_Save_Backup.Forms {
             this.SavePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.LastWriteTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HonorOnly = new System.Windows.Forms.CheckBox();
+            this.BackupAction = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.restoreBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TrayMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).BeginInit();
+            this.BackupAction.SuspendLayout();
             this.SuspendLayout();
             // 
             // Tray
@@ -152,6 +156,7 @@ namespace BG3_Save_Backup.Forms {
             this.SavesDgv.ReadOnly = true;
             this.SavesDgv.Size = new System.Drawing.Size(643, 207);
             this.SavesDgv.TabIndex = 8;
+            this.SavesDgv.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SavesDgv_MouseUp);
             // 
             // SavePath
             // 
@@ -180,6 +185,28 @@ namespace BG3_Save_Backup.Forms {
             this.HonorOnly.UseVisualStyleBackColor = true;
             this.HonorOnly.CheckedChanged += new System.EventHandler(this.HonorOnly_CheckedChanged);
             // 
+            // BackupAction
+            // 
+            this.BackupAction.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteBackupToolStripMenuItem,
+            this.restoreBackupToolStripMenuItem});
+            this.BackupAction.Name = "BackupAction";
+            this.BackupAction.Size = new System.Drawing.Size(181, 70);
+            // 
+            // deleteBackupToolStripMenuItem
+            // 
+            this.deleteBackupToolStripMenuItem.Name = "deleteBackupToolStripMenuItem";
+            this.deleteBackupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteBackupToolStripMenuItem.Text = "Delete Backup";
+            this.deleteBackupToolStripMenuItem.Click += new System.EventHandler(this.deleteBackupToolStripMenuItem_Click);
+            // 
+            // restoreBackupToolStripMenuItem
+            // 
+            this.restoreBackupToolStripMenuItem.Name = "restoreBackupToolStripMenuItem";
+            this.restoreBackupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restoreBackupToolStripMenuItem.Text = "Restore Backup";
+            this.restoreBackupToolStripMenuItem.Click += new System.EventHandler(this.restoreBackupToolStripMenuItem_Click);
+            // 
             // Status
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -202,6 +229,7 @@ namespace BG3_Save_Backup.Forms {
             this.Resize += new System.EventHandler(this.Status_Resize);
             this.TrayMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).EndInit();
+            this.BackupAction.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,5 +252,8 @@ namespace BG3_Save_Backup.Forms {
         private System.Windows.Forms.DataGridViewTextBoxColumn SavePath;
         private System.Windows.Forms.DataGridViewTextBoxColumn LastWriteTime;
         private System.Windows.Forms.CheckBox HonorOnly;
+        private System.Windows.Forms.ContextMenuStrip BackupAction;
+        private System.Windows.Forms.ToolStripMenuItem deleteBackupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem restoreBackupToolStripMenuItem;
     }
 }
