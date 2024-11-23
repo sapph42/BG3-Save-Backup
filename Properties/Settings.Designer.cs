@@ -58,5 +58,17 @@ namespace BG3_Save_Backup.Properties {
                 this["UpgradeRequired"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool HonorOnly {
+            get {
+                return ((bool)(this["HonorOnly"]));
+            }
+            set {
+                this["HonorOnly"] = value;
+            }
+        }
     }
 }

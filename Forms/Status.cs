@@ -1,4 +1,5 @@
 using BG3_Save_Backup.Properties;
+using BG3_Save_Backup.Classes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.IO;
 
 namespace BG3_Save_Backup.Forms {
     public partial class Status : Form {
+        private string currentCellVal;
         public Status() {
             InitializeComponent();
             if (Program.ValidBackupTarget && Program.Watcher.Enabled)
@@ -32,7 +34,7 @@ namespace BG3_Save_Backup.Forms {
         private void WatcherTrigger(object sender, EventArgs e) {
             RefreshDgv();
         }
-        private void RefreshDgv(IEnumerable<DirectoryInfo> folders = null) {
+        private void RefreshDgv(List<DirectoryInfo> folders = null) {
             if (folders is null) {
                 folders = new DirectoryInfo(BackupFolderTextbox.Text)
                     .GetDirectories()
@@ -56,6 +58,7 @@ namespace BG3_Save_Backup.Forms {
                         folders.AddRange(honorSnapshots);
                 }
             }
+     
             folders.OrderByDescending(f => f.LastWriteTime).ToList().Take(10);
             if (SavesDgv.InvokeRequired) {
                 Action safeRefresh = delegate {
@@ -132,6 +135,49 @@ namespace BG3_Save_Backup.Forms {
         private void HonorOnly_CheckedChanged(object sender, EventArgs e) {
             Settings.Default.HonorOnly = HonorOnly.Checked;
             Settings.Default.Save();
+        }
+        private void SavesDgv_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button != MouseButtons.Right) return;
+            var currentMouseOverRow = SavesDgv.HitTest(e.X, e.Y);
+            int row = currentMouseOverRow.RowIndex;
+            int col = currentMouseOverRow.ColumnIndex;
+            if (row < 0 || col < 0) return;
+            currentCellVal = SavesDgv.Rows[row].Cells[0].Value.ToString();
+            BackupAction.Show((Control)sender, new System.Drawing.Point(e.X, e.Y));
+        }
+
+        private void deleteBackupToolStripMenuItem_Click(object sender, EventArgs e) {
+            string path = Path.Combine(Settings.Default.BackupSaveLoc, currentCellVal);
+            try {
+                Directory.Delete(path, true);
+                RefreshDgv();
+            } catch {
+
+            }
+        }
+
+        private void restoreBackupToolStripMenuItem_Click(object sender, EventArgs e) {
+            string targetPath = "";
+            if (currentCellVal.Contains("_HonourMode"))
+                targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentCellVal.Split('\\')[0]);
+            else
+                targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentCellVal);
+            string path = Path.Combine(Settings.Default.BackupSaveLoc, currentCellVal);
+            Program.Watcher.EnableRaisingEvents = false;
+            foreach (var file in new DirectoryInfo(targetPath).GetFiles()) {
+                file.Delete();
+            }
+            foreach (var file in new DirectoryInfo(path).GetFiles()) {
+                using (var backupSave = SafeFileHandle.WaitForFile(file.FullName)) {
+                    if (backupSave is null) continue;
+                    var saveName = file.Name;
+                    string targetFile = Path.Combine(targetPath, saveName);
+                    using (FileStream larianSave = File.Create(targetFile)) {
+                        backupSave.CopyTo(larianSave);
+                    }
+                }
+            }
+            Program.Watcher.EnableRaisingEvents = true;
         }
     }
 }

@@ -24,6 +24,15 @@ namespace BG3_Save_Backup.Classes {
         }
         public bool Enabled => _enabled;
         public event EventHandler BackupTriggered;
+        public bool EnableRaisingEvents {
+            get {
+                if (_watcher is null) return false;
+                return _watcher.EnableRaisingEvents;
+            }
+            set {
+                _watcher.EnableRaisingEvents = value;
+            }
+        }
         public SaveWatcher() : this(Settings.Default.LarianSaveLoc, Settings.Default.BackupSaveLoc) { }
         public SaveWatcher(string LarianPath, string BackupPath) {
             _savepath = LarianPath;
@@ -58,7 +67,7 @@ namespace BG3_Save_Backup.Classes {
                 _ = Directory.CreateDirectory(targetPath);
             }
             foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
-                using (var larianSave = WaitForFile(file.FullName)) {
+                using (var larianSave = SafeFileHandle.WaitForFile(file.FullName)) {
                     if (larianSave is null) return;
                     var saveName = file.Name;
                     string targetFile = Path.Combine(targetPath, saveName);
@@ -79,7 +88,7 @@ namespace BG3_Save_Backup.Classes {
                 _ = Directory.CreateDirectory(targetPath);
             }
             foreach (var file in new DirectoryInfo(e.FullPath).GetFiles()) {
-                using (var larianSave = WaitForFile(file.FullName)) {
+                using (var larianSave = SafeFileHandle.WaitForFile(file.FullName)) {
                     if (larianSave is null) return;
                     var saveName = file.Name;
                     string targetFile = Path.Combine(targetPath, saveName);
@@ -89,19 +98,6 @@ namespace BG3_Save_Backup.Classes {
                 }
             }
             BackupTriggered?.Invoke(this, EventArgs.Empty);
-        }
-        private FileStream WaitForFile(string fullpath) {
-            for (int numTries = 0; numTries < 100; numTries++) {
-                FileStream fs = null;
-                try {
-                    fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    return fs;
-                } catch (IOException) {
-                    fs?.Dispose();
-                    Thread.Sleep(250);
-                }
-            }
-            return null;
         }
     }
 }
