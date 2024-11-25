@@ -145,7 +145,7 @@ namespace BG3_Save_Backup.Forms {
             currentCellVal = SavesDgv.Rows[row].Cells[0].Value.ToString();
             BackupAction.Show((Control)sender, new System.Drawing.Point(e.X, e.Y));
         }
-        private void SavesDgv_CellMouseClick(object sender, DataGridViewCellEventArgs e) {
+        private void SavesDgv_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
             if (e.Button != MouseButtons.Left)
                 return;
             DataGridViewCell cell = SavesDgv.Rows[e.RowIndex].Cells[0];
@@ -157,7 +157,8 @@ namespace BG3_Save_Backup.Forms {
                 .FirstOrDefault();
             string imagePath = Path.Combine(fullPath, imageName);
             byte[] imageData = File.ReadAllBytes(imagePath);
-            screenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);            
+            ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
+            ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
         }
         private void deleteBackupToolStripMenuItem_Click(object sender, EventArgs e) {
             string path = Path.Combine(Settings.Default.BackupSaveLoc, currentCellVal);
