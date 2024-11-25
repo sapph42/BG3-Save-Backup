@@ -46,11 +46,22 @@ namespace BG3_Save_Backup {
             Exception e = (Exception)args.ExceptionObject;
             MessageBox.Show($"Unhandled exception caught:\r\n{e.Message}");
         }
+        static Assembly AssemblyResolve(object sender, ResolveEventArgs e) {
+            string thisExe = Assembly.GetExecutingAssembly().GetName().Name;
+            AssemblyName embeddedAssembly = new AssemblyName(e.Name);
+            string resourceName = thisExe + "." + embeddedAssembly.Name + ".dll";
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName)) {
+                byte[] assemblyData = new byte[stream.Length];
+                stream.Read(assemblyData, 0, assemblyData.Length);
+                return Assembly.Load(assemblyData);
+            }
+        }        
         [STAThread]
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
+            AppDomain.CurrentDomain.AssemblyResolve += AssemblyResolve;
             ValidBackupTarget = ValidateSettings();
             Watcher = new SaveWatcher();
             Application.Run(new Status());
