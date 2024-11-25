@@ -145,7 +145,20 @@ namespace BG3_Save_Backup.Forms {
             currentCellVal = SavesDgv.Rows[row].Cells[0].Value.ToString();
             BackupAction.Show((Control)sender, new System.Drawing.Point(e.X, e.Y));
         }
-
+        private void SavesDgv_CellMouseClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.Button != MouseButtons.Left)
+                return;
+            DataGridViewCell cell = SavesDgv.Rows[e.RowIndex].Cells[0];
+            string savePath = cell.Value.ToString();
+            string fullPath = Path.Combine(Settings.Default.BackupSaveLoc, savePath);
+            string imageName = Directory
+                .GetFiles(fullPath)
+                .Where(f => f.EndsWith("webp"))
+                .FirstOrDefault();
+            string imagePath = Path.Combine(fullPath, imageName);
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            screenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);            
+        }
         private void deleteBackupToolStripMenuItem_Click(object sender, EventArgs e) {
             string path = Path.Combine(Settings.Default.BackupSaveLoc, currentCellVal);
             try {
