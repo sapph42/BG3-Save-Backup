@@ -43,6 +43,7 @@ namespace BG3_Save_Backup.Forms {
             this.BackupAction = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restoreBackupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ScreenshotImage = new System.Windows.Forms.PictureBox();
             this.TrayMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SavesDgv)).BeginInit();
             this.BackupAction.SuspendLayout();
@@ -157,6 +158,7 @@ namespace BG3_Save_Backup.Forms {
             this.SavesDgv.Size = new System.Drawing.Size(643, 207);
             this.SavesDgv.TabIndex = 8;
             this.SavesDgv.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SavesDgv_MouseUp);
+            this.SavesDgv.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.SavesDgv_CellMouseClick);
             // 
             // SavePath
             // 
@@ -184,6 +186,14 @@ namespace BG3_Save_Backup.Forms {
             this.HonorOnly.Text = "Honour Mode Only";
             this.HonorOnly.UseVisualStyleBackColor = true;
             this.HonorOnly.CheckedChanged += new System.EventHandler(this.HonorOnly_CheckedChanged);
+            //
+            // ScreenshotImage
+            //
+            this.ScreenshotImage.Location = new System.Drawing.Point(664, 159);
+            this.ScreenshotImage.Name = "ScreenshotImage";
+            this.ScreenshotImage.Size = new System.Drawing.Size(400, 225);
+            this.ScreenshotImage.TabIndex = 10;
+            this.ScreenshotImage.TabStop = false;
             // 
             // BackupAction
             // 
@@ -211,7 +221,8 @@ namespace BG3_Save_Backup.Forms {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 410);
+            this.ClientSize = new System.Drawing.Size(1078, 397);
+            this.Controls.Add(this.ScreenshotImage);
             this.Controls.Add(this.HonorOnly);
             this.Controls.Add(this.SavesDgv);
             this.Controls.Add(this.label3);
@@ -255,5 +266,6 @@ namespace BG3_Save_Backup.Forms {
         private System.Windows.Forms.ContextMenuStrip BackupAction;
         private System.Windows.Forms.ToolStripMenuItem deleteBackupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem restoreBackupToolStripMenuItem;
+        private System.Windows.Forms.PictureBox ScreenshotImage;
     }
 }

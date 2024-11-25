@@ -97,5 +97,15 @@ namespace BG3_Save_Backup.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Libwebp {
+            get {
+                object obj = ResourceManager.GetObject("Libwebp", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }        
     }
 }
