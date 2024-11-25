@@ -158,6 +158,7 @@ namespace BG3_Save_Backup.Forms {
             this.SavesDgv.Size = new System.Drawing.Size(643, 207);
             this.SavesDgv.TabIndex = 8;
             this.SavesDgv.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SavesDgv_MouseUp);
+            this.SavesDgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.SavesDgv_CellClick);
             // 
             // SavePath
             // 
