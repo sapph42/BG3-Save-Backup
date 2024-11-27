@@ -151,11 +151,12 @@ namespace BG3_Save_Backup.Forms {
             DataGridViewCell cell = SavesDgv.Rows[e.RowIndex].Cells[0];
             string savePath = cell.Value.ToString();
             string fullPath = Path.Combine(Settings.Default.BackupSaveLoc, savePath);
-            string imageName = Directory
+            string imagePath = Directory
                 .GetFiles(fullPath)
-                .Where(f => f.EndsWith("webp"))
+                .Where(f => f.EndsWith("WebP"))
                 .FirstOrDefault();
-            string imagePath = Path.Combine(fullPath, imageName);
+            if (imagePath is null)
+                return;
             byte[] imageData = File.ReadAllBytes(imagePath);
             ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
             ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
