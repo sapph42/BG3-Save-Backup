@@ -60,6 +60,9 @@ namespace BG3_Save_Backup.Forms {
             }
      
             folders.OrderByDescending(f => f.LastWriteTime).ToList().Take(10);
+            var splitPath = Settings.Default.BackupSaveLoc.Split(Path.DirectorySeparatorChar);
+            var parent = splitPath[splitPath.Length - 1];
+            folders.Where(f => f.Name != parent).ToList();
             if (SavesDgv.InvokeRequired) {
                 Action safeRefresh = delegate {
                     RefreshDgv(folders);
