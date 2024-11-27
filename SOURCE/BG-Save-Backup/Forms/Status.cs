@@ -60,9 +60,6 @@ namespace BG3_Save_Backup.Forms {
             }
      
             folders.OrderByDescending(f => f.LastWriteTime).ToList().Take(10);
-            var splitPath = Settings.Default.BackupSaveLoc.Split(Path.DirectorySeparatorChar);
-            var parent = splitPath[splitPath.Length - 1];
-            folders.Where(f => f.Name != parent).ToList();
             if (SavesDgv.InvokeRequired) {
                 Action safeRefresh = delegate {
                     RefreshDgv(folders);
@@ -76,6 +73,8 @@ namespace BG3_Save_Backup.Forms {
                         file = Path.Combine(folder.Parent.Name, folder.Name);
                     else
                         file = folder.Name;
+                    if (!Directory.Exists(Path.Combine(Settings.Default.BackupSaveLoc, file)))
+                        continue;
                     SavesDgv.Rows.Add(file, folder.LastWriteTime.ToString("dd MMM yyyy HH:mm:ss"));
                     SavesDgv.Sort(LastWriteTime, ListSortDirection.Descending);
                 }
@@ -138,6 +137,7 @@ namespace BG3_Save_Backup.Forms {
         private void HonorOnly_CheckedChanged(object sender, EventArgs e) {
             Settings.Default.HonorOnly = HonorOnly.Checked;
             Settings.Default.Save();
+            RefreshDgv();
         }
         private void SavesDgv_MouseUp(object sender, MouseEventArgs e) {
             if (e.Button != MouseButtons.Right) return;
