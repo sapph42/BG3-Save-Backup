@@ -146,6 +146,8 @@ namespace BG3_Save_Backup.Forms {
             BackupAction.Show((Control)sender, new System.Drawing.Point(e.X, e.Y));
         }
         private void SavesDgv_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e) {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
             if (e.Button != MouseButtons.Left)
                 return;
             DataGridViewCell cell = SavesDgv.Rows[e.RowIndex].Cells[0];
