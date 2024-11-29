@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BG3_Save_Backup.Properties {
+namespace BG3SaveBackup.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace BG3_Save_Backup.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BG3_Save_Backup.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("BG3SaveBackup.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -70,16 +70,6 @@ namespace BG3_Save_Backup.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon DefaultIcon {
-            get {
-                object obj = ResourceManager.GetObject("DefaultIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to \Larian Studios\Baldur&apos;s Gate 3\PlayerProfiles\Public\Savegames\Story.
         /// </summary>
         internal static string DefaultSavePath {
@@ -87,25 +77,25 @@ namespace BG3_Save_Backup.Properties {
                 return ResourceManager.GetString("DefaultSavePath", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
-        /// </summary>
-        internal static System.Drawing.Icon ErrorIcon {
-            get {
-                object obj = ResourceManager.GetObject("ErrorIcon", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] Libwebp {
-            get {
-                object obj = ResourceManager.GetObject("Libwebp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }        
-    }
+
+		/// <summary>
+		///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+		/// </summary>
+		internal static System.Drawing.Icon DefaultIcon {
+			get {
+				object obj = ResourceManager.GetObject("DefaultIcon", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+		/// </summary>
+		internal static System.Drawing.Icon ErrorIcon {
+			get {
+				object obj = ResourceManager.GetObject("ErrorIcon", resourceCulture);
+				return ((System.Drawing.Icon)(obj));
+			}
+		}
+	}
 }
