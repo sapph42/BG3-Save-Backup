@@ -1,4 +1,5 @@
-﻿using LSLib.LS;
+﻿using System.Text.RegularExpressions;
+using LSLib.LS;
 using LSLib.LS.Enums;
 
 namespace BG3SaveBackup.Classes;
@@ -19,9 +20,7 @@ internal class BG3SaveData {
 			packager.UncompressPackage(FileName, _targetPath);
 		} catch (NotAPackageException) {
 			if (ModPathVisitor.archivePartRe.IsMatch(Path.GetFileName(FileName))) {
-				MessageBox.Show($"The specified file is part of a multi-part package; only the first part needs to be extracted.", "Extraction Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			} else {
-				MessageBox.Show($"The specified file ({FileName}) is not an PAK package or savegame archive.", "Extraction Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			}
 		}
 		string metaFile = Path.Combine(_targetPath, "meta.lsf");
@@ -32,16 +31,23 @@ internal class BG3SaveData {
 			var resource = ResourceUtils.LoadResource(metaFile, loadParams);
 			var conversionParams = ResourceConversionParameters.FromGameVersion(Game.BaldursGate3);
 			ResourceUtils.SaveResource(resource, metaXml, ResourceFormat.LSX, conversionParams);
-			MessageBox.Show("Resource saved successfully.");
 		} catch (InvalidDataException exc) {
-			MessageBox.Show($"Unable to convert resource.{Environment.NewLine}{Environment.NewLine}{exc.Message}", "Conversion Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 		} catch (Exception exc) {
-			MessageBox.Show($"Internal error!{Environment.NewLine}{Environment.NewLine}{exc}", "Conversion Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
-		System.Xml.XmlDocument metaData = new();
-		metaData.LoadXml(metaFile);
-		_gameId = metaData.GetElementById("GameID")?.GetAttribute("value").ToString();
-		_leaderName = metaData.GetElementById("LeaderName")?.GetAttribute("value").ToString();
+		Regex gamePattern = new(@"\s*<attribute id=""GameID"" type=""FixedString"" value=""(?<gameid>[^""]*)""\s*/>");
+		Regex namePattern = new(@"\s*<attribute id=""LeaderName"" type=""LSString"" value=""(?<name>[^""]*)""\s*/>");
+
+        foreach (var line in File.ReadLines(metaXml)) {
+			var gameMatch = gamePattern.Match(line);
+			var nameMatch = namePattern.Match(line);
+			if (gameMatch.Captures.Count + nameMatch.Captures.Count == 0) 
+				 continue;
+			if (gameMatch.Captures.Count > 0)
+				_gameId = gameMatch.Groups["gameid"].Value;
+			if (nameMatch.Captures.Count > 0)
+				_leaderName = nameMatch.Groups["name"].Value;
+			Console.WriteLine($"{_gameId} : {_leaderName}");	
+        }
 	}
 }
 

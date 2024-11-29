@@ -35,17 +35,13 @@
             BackupFolderBrowse = new Button();
             label2 = new Label();
             label3 = new Label();
-            SavesDgv = new DataGridView();
-            SavePath = new DataGridViewTextBoxColumn();
-            LastWriteTime = new DataGridViewTextBoxColumn();
-            HonorOnly = new CheckBox();
             BackupAction = new ContextMenuStrip(components);
             deleteBackupToolStripMenuItem = new ToolStripMenuItem();
             restoreBackupToolStripMenuItem = new ToolStripMenuItem();
             ScreenshotImage = new PictureBox();
             SaveTree = new TreeView();
+            button1 = new Button();
             TrayMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)SavesDgv).BeginInit();
             BackupAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ScreenshotImage).BeginInit();
             SuspendLayout();
@@ -143,48 +139,6 @@
             label3.TabIndex = 7;
             label3.Text = "Most Recent Backup Saves";
             // 
-            // SavesDgv
-            // 
-            SavesDgv.AllowUserToAddRows = false;
-            SavesDgv.AllowUserToDeleteRows = false;
-            SavesDgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            SavesDgv.Columns.AddRange(new DataGridViewColumn[] { SavePath, LastWriteTime });
-            SavesDgv.Location = new Point(15, 177);
-            SavesDgv.Name = "SavesDgv";
-            SavesDgv.ReadOnly = true;
-            SavesDgv.Size = new Size(643, 207);
-            SavesDgv.TabIndex = 8;
-            SavesDgv.CellMouseClick += SavesDgv_CellMouseClick;
-            SavesDgv.MouseUp += SavesDgv_MouseUp;
-            // 
-            // SavePath
-            // 
-            SavePath.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            SavePath.HeaderText = "Save";
-            SavePath.MinimumWidth = 450;
-            SavePath.Name = "SavePath";
-            SavePath.ReadOnly = true;
-            SavePath.Width = 450;
-            // 
-            // LastWriteTime
-            // 
-            LastWriteTime.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            LastWriteTime.HeaderText = "LastWriteTime";
-            LastWriteTime.Name = "LastWriteTime";
-            LastWriteTime.ReadOnly = true;
-            LastWriteTime.Width = 107;
-            // 
-            // HonorOnly
-            // 
-            HonorOnly.AutoSize = true;
-            HonorOnly.Location = new Point(543, 157);
-            HonorOnly.Name = "HonorOnly";
-            HonorOnly.Size = new Size(129, 19);
-            HonorOnly.TabIndex = 9;
-            HonorOnly.Text = "Honour Mode Only";
-            HonorOnly.UseVisualStyleBackColor = true;
-            HonorOnly.CheckedChanged += HonorOnly_CheckedChanged;
-            // 
             // BackupAction
             // 
             BackupAction.Items.AddRange(new ToolStripItem[] { deleteBackupToolStripMenuItem, restoreBackupToolStripMenuItem });
@@ -207,7 +161,7 @@
             // 
             // ScreenshotImage
             // 
-            ScreenshotImage.Location = new Point(664, 159);
+            ScreenshotImage.Location = new Point(666, 262);
             ScreenshotImage.Name = "ScreenshotImage";
             ScreenshotImage.Size = new Size(400, 225);
             ScreenshotImage.TabIndex = 10;
@@ -215,20 +169,31 @@
             // 
             // SaveTree
             // 
-            SaveTree.Location = new Point(15, 410);
+            SaveTree.Location = new Point(15, 179);
             SaveTree.Name = "SaveTree";
-            SaveTree.Size = new Size(643, 172);
+            SaveTree.Size = new Size(643, 308);
             SaveTree.TabIndex = 11;
+            SaveTree.AfterSelect += SaveTree_AfterSelect;
+            SaveTree.MouseUp += SaveTree_MouseUp;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(583, 150);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 12;
+            button1.Text = "RefreshNow";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += RefreshNow_Click;
             // 
             // Display
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1078, 605);
+            ClientSize = new Size(1078, 499);
+            Controls.Add(button1);
             Controls.Add(SaveTree);
             Controls.Add(ScreenshotImage);
-            Controls.Add(HonorOnly);
-            Controls.Add(SavesDgv);
             Controls.Add(label3);
             Controls.Add(BackupFolderBrowse);
             Controls.Add(BackupFolderTextbox);
@@ -239,7 +204,6 @@
             Name = "Display";
             Text = "Status";
             TrayMenu.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)SavesDgv).EndInit();
             BackupAction.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ScreenshotImage).EndInit();
             ResumeLayout(false);
@@ -256,17 +220,14 @@
 		private System.Windows.Forms.TextBox BackupFolderTextbox;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.DataGridView SavesDgv;
 		private System.Windows.Forms.ContextMenuStrip TrayMenu;
 		private System.Windows.Forms.ToolStripMenuItem statusToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-		private System.Windows.Forms.DataGridViewTextBoxColumn SavePath;
-		private System.Windows.Forms.DataGridViewTextBoxColumn LastWriteTime;
-		private System.Windows.Forms.CheckBox HonorOnly;
 		private System.Windows.Forms.ContextMenuStrip BackupAction;
 		private System.Windows.Forms.ToolStripMenuItem deleteBackupToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem restoreBackupToolStripMenuItem;
 		private System.Windows.Forms.PictureBox ScreenshotImage;
         private TreeView SaveTree;
+        private Button button1;
     }
 }

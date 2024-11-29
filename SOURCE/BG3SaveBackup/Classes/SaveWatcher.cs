@@ -84,14 +84,14 @@ internal class SaveWatcher {
 		string destinationPath = Settings.Default.BackupSaveLoc;
 		if (saveData.GameId is null) {
 			destinationPath = Path.Combine(destinationPath, sourceDir.Name);
-			if (sourcePath.EndsWith("_HonourMode")) {
+			if (sourcePath.EndsWith("_HonourMode"))
 				destinationPath = Path.Combine(destinationPath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
-			}
 		} else {
-			destinationPath = Path.Combine(Settings.Default.BackupSaveLoc, saveData.GameId);
-			if (sourcePath.EndsWith("_HonourMode")) {
-				destinationPath = Path.Combine(destinationPath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
-			}
+			destinationPath = Path.Combine(Settings.Default.BackupSaveLoc, $"{saveData.LeaderName} - {saveData.GameId}");
+			if (sourcePath.EndsWith("_HonourMode"))
+				destinationPath = Path.Combine(destinationPath, sourceDir.Name, DateTime.Now.ToString("ddMMMyyyyHHmm"));
+			else
+				destinationPath = Path.Combine(destinationPath, sourceDir.Name);
 		}
 		foreach (var file in files) {
 			using var larianSave = SafeFileHandle.WaitForFile(file.FullName);
