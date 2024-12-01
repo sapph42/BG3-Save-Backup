@@ -214,6 +214,8 @@
             Controls.Add(label1);
             Name = "Display";
             Text = "Status";
+            Load += Status_Load;
+            Shown += Status_Shown;
             TrayMenu.ResumeLayout(false);
             BackupAction.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)ScreenshotImage).EndInit();

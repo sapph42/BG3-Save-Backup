@@ -21,8 +21,6 @@ public partial class Display : Form {
         Program.Watcher.BackupTriggered += WatcherTrigger;
     }
     private void Status_Load(object sender, EventArgs e) {
-        Hide();
-        WindowState = FormWindowState.Minimized;
         RefreshTree();
     }
     private void Status_Shown(object sender, EventArgs e) {
