@@ -132,7 +132,7 @@ public partial class Display : Form {
             .GetFiles(currentNodePath!)
             .Where(f => f.EndsWith("WebP"))
             .FirstOrDefault();
-        if (imagePath is null) {
+        if (imagePath is not null) {
             byte[] imageData = File.ReadAllBytes(imagePath);
             ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
             ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
