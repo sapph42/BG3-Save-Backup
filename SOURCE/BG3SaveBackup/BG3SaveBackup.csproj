@@ -10,7 +10,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyVersion>2.1.1.2</AssemblyVersion>
     <FileVersion>2.1.1.2</FileVersion>
-    <BaseOutputPath>C:\Users\mc\Documents\GitHub\BG3-Save-Backup\BINARY</BaseOutputPath>
+    <BaseOutputPath>..\..\BINARY</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
