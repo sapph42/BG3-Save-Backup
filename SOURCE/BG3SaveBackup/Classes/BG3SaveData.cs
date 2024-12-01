@@ -81,7 +81,7 @@ internal partial class BG3SaveData {
         }
 	}
 
-    [GeneratedRegex(@"\s*<attribute id=""GameID"" type=""FixedString"" value=""(?<gameid>[^""]*)""\s*/>")]
+    [GeneratedRegex(@"\s*<attribute id=""GameSessionID"" type=""FixedString"" value=""(?<gameid>[^""]*)""\s*/>")]
     private static partial Regex GameIdRegex();
     [GeneratedRegex(@"\s*<attribute id=""LeaderName"" type=""LSString"" value=""(?<name>[^""]*)""\s*/>")]
     private static partial Regex NameRegex();

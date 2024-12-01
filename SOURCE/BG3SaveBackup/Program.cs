@@ -47,7 +47,7 @@ internal static class Program {
         // To customize application configuration such as set high DPI settings or default font,
         // see https://aka.ms/applicationconfiguration.
         ApplicationConfiguration.Initialize();
-		AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
+		//AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(UnhandledException);
 		ValidBackupTarget = ValidateSettings();
 		Watcher = new SaveWatcher();
 		Application.Run(new Display());
