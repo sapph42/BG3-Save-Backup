@@ -132,17 +132,21 @@ public partial class Display : Form {
             .GetFiles(currentNodePath!)
             .Where(f => f.EndsWith("WebP"))
             .FirstOrDefault();
-        if (imagePath is null)
-            return;
-        byte[] imageData = File.ReadAllBytes(imagePath);
-        ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
-        ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
+        if (imagePath is null) {
+            byte[] imageData = File.ReadAllBytes(imagePath);
+            ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
+            ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
+        } else {
+            ScreenshotImage.Image = null;
+        }
         string? savePath = Directory
             .GetFiles(currentNodePath!)
             .Where(f => f.EndsWith("lsv"))
             .FirstOrDefault();
-        if (savePath is null)
+        if (savePath is null) {
+            SaveDataTextbox.Text = "";
             return;
+        }
         BG3SaveData saveData = new(savePath);
         saveData.ParseSaveData();
         StringBuilder sb = new();
