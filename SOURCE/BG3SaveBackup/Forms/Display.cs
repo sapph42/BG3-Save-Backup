@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Text;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BG3SaveBackup.Forms;
@@ -138,6 +139,39 @@ public partial class Display : Form {
         byte[] imageData = File.ReadAllBytes(imagePath);
         ScreenshotImage.Image = WebP.DecodeFromBytes(imageData, imageData.Length);
         ScreenshotImage.SizeMode = PictureBoxSizeMode.StretchImage;
+        string? savePath = Directory
+            .GetFiles(currentNodePath!)
+            .Where(f => f.EndsWith("lsv"))
+            .FirstOrDefault();
+        if (savePath is null)
+            return;
+        BG3SaveData saveData = new(savePath);
+        saveData.ParseSaveData();
+        StringBuilder sb = new();
+        sb.AppendLine($"Current Zone: {saveData.Level}");
+        sb.AppendLine($"Current Subzone: {saveData.SubLevel}");
+        if (saveData.SaveTimestamp is not null) {
+            DateTime timestamp = (DateTime)saveData.SaveTimestamp;
+            sb.AppendLine($"Save Timestamp: {timestamp.ToString("F")}");
+        }
+        sb.AppendLine($"Current Difficulty: {saveData.Difficulty}");
+        sb.AppendLine($"Current Play Time: {ToReadableString(saveData.PlayTime)}");
+        SaveDataTextbox.Text = sb.ToString();
+    }
+    private string ToReadableString(TimeSpan? span) {
+        if (span is null) return "";
+        TimeSpan goodSpan = (TimeSpan)span;
+        string formatted = string.Format("{0}{1}{2}{3}",
+            goodSpan.Duration().Days > 0 ? string.Format("{0:0} day{1}, ", goodSpan.Days, goodSpan.Days == 1 ? string.Empty : "s") : string.Empty,
+            goodSpan.Duration().Hours > 0 ? string.Format("{0:0} hour{1}, ", goodSpan.Hours, goodSpan.Hours == 1 ? string.Empty : "s") : string.Empty,
+            goodSpan.Duration().Minutes > 0 ? string.Format("{0:0} minute{1}, ", goodSpan.Minutes, goodSpan.Minutes == 1 ? string.Empty : "s") : string.Empty,
+            goodSpan.Duration().Seconds > 0 ? string.Format("{0:0} second{1}", goodSpan.Seconds, goodSpan.Seconds == 1 ? string.Empty : "s") : string.Empty);
+
+        if (formatted.EndsWith(", ")) formatted = formatted.Substring(0, formatted.Length - 2);
+
+        if (string.IsNullOrEmpty(formatted)) formatted = "0 seconds";
+
+        return formatted;
     }
     private void deleteBackupToolStripMenuItem_Click(object sender, EventArgs e) {
         try {

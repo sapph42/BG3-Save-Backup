@@ -41,6 +41,7 @@
             ScreenshotImage = new PictureBox();
             SaveTree = new TreeView();
             button1 = new Button();
+            SaveDataTextbox = new TextBox();
             TrayMenu.SuspendLayout();
             BackupAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ScreenshotImage).BeginInit();
@@ -178,19 +179,29 @@
             // 
             // button1
             // 
-            button1.Location = new Point(583, 150);
+            button1.Location = new Point(568, 150);
             button1.Name = "button1";
-            button1.Size = new Size(75, 23);
+            button1.Size = new Size(90, 23);
             button1.TabIndex = 12;
             button1.Text = "RefreshNow";
             button1.UseVisualStyleBackColor = true;
             button1.Click += RefreshNow_Click;
+            // 
+            // SaveDataTextbox
+            // 
+            SaveDataTextbox.Location = new Point(666, 153);
+            SaveDataTextbox.Multiline = true;
+            SaveDataTextbox.Name = "SaveDataTextbox";
+            SaveDataTextbox.ReadOnly = true;
+            SaveDataTextbox.Size = new Size(400, 103);
+            SaveDataTextbox.TabIndex = 13;
             // 
             // Display
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1078, 499);
+            Controls.Add(SaveDataTextbox);
             Controls.Add(button1);
             Controls.Add(SaveTree);
             Controls.Add(ScreenshotImage);
@@ -229,5 +240,6 @@
 		private System.Windows.Forms.PictureBox ScreenshotImage;
         private TreeView SaveTree;
         private Button button1;
+        private TextBox SaveDataTextbox;
     }
 }
