@@ -75,12 +75,14 @@ internal class SaveWatcher {
 	private void FileWriter(string sourcePath, bool createNew) {
 		DirectoryInfo sourceDir = new(sourcePath);
 		var files = sourceDir.GetFiles();
-		var lsvFile = files.Where(f => f.Extension.ToLower() == ".lsv").FirstOrDefault();
-		var webpFile = files.Where(f => f.Extension.ToLower() == ".webp").FirstOrDefault();
+		var lsvFile = files.Where(f => f.Extension.Equals(".lsv", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+		var webpFile = files.Where(f => f.Extension.Equals(".webp", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
 		if (lsvFile is null)
 			return;
 		BG3SaveData saveData = new(lsvFile.FullName);
-		saveData.ParseSaveData();
+		using (var larianSave = SafeFileHandle.WaitForFile(lsvFile.FullName)) {
+			saveData.ParseSaveData();
+		}
 		string destinationPath = Settings.Default.BackupSaveLoc;
 		if (saveData.GameId is null) {
 			destinationPath = Path.Combine(destinationPath, sourceDir.Name);
@@ -94,6 +96,7 @@ internal class SaveWatcher {
 				destinationPath = Path.Combine(destinationPath, sourceDir.Name);
 		}
 		foreach (var file in files) {
+			if (file.Extension == ".old") continue;
 			using var larianSave = SafeFileHandle.WaitForFile(file.FullName);
 			if (larianSave is null) return;
 			var saveName = file.Name;
