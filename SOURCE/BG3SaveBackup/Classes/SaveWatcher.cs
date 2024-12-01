@@ -79,17 +79,28 @@ internal class SaveWatcher {
 		var webpFile = files.Where(f => f.Extension.Equals(".webp", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
 		if (lsvFile is null)
 			return;
-		BG3SaveData saveData = new(lsvFile.FullName);
+		string? gameSessionId;
+		string? leaderName;
 		using (var larianSave = SafeFileHandle.WaitForFile(lsvFile.FullName)) {
-			saveData.ParseSaveData();
+			if (larianSave is null) return;
+			var tempFolder = Path.GetTempPath();
+			var tempFile = Path.Combine(tempFolder, lsvFile.Name);
+			using var tempSave = new FileStream(tempFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+			larianSave.CopyTo(tempSave);
+			tempSave.Flush();
+			tempSave.Close();
+            BG3SaveData saveData = new(tempFile);
+            saveData.ParseSaveData();
+			gameSessionId = saveData.GameId;
+			leaderName = saveData.LeaderName;
 		}
 		string destinationPath = Settings.Default.BackupSaveLoc;
-		if (saveData.GameId is null) {
+		if (gameSessionId is null) {
 			destinationPath = Path.Combine(destinationPath, sourceDir.Name);
 			if (sourcePath.EndsWith("_HonourMode"))
 				destinationPath = Path.Combine(destinationPath, DateTime.Now.ToString("ddMMMyyyyHHmm"));
 		} else {
-			destinationPath = Path.Combine(Settings.Default.BackupSaveLoc, $"{saveData.LeaderName} - {saveData.GameId}");
+			destinationPath = Path.Combine(Settings.Default.BackupSaveLoc, $"{leaderName} - {gameSessionId}");
 			if (sourcePath.EndsWith("_HonourMode"))
 				destinationPath = Path.Combine(destinationPath, sourceDir.Name, DateTime.Now.ToString("ddMMMyyyyHHmm"));
 			else
