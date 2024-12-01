@@ -42,7 +42,7 @@
 
   <ItemGroup>
     <Reference Include="LSLib">
-      <HintPath>..\..\..\lslib\LSLib\bin\Release\net8.0\LSLib.dll</HintPath>
+      <HintPath>LSLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
