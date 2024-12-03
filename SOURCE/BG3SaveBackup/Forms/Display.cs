@@ -185,10 +185,20 @@ public partial class Display : Form {
     }
     private void restoreBackupToolStripMenuItem_Click(object sender, EventArgs e) {
         string targetPath = "";
-        if (currentNodePath is null || currentNodeFolder is null)
+        string honourModeSuffix = "__HonourMode";
+        string? savePath = Directory
+            .GetFiles(currentNodePath!)
+            .Where(f => f.EndsWith("lsv"))
+            .FirstOrDefault();
+        if (currentNodePath is null || currentNodeFolder is null || savePath is null)
             return;
-        if (currentNodePath.Contains("_HonourMode"))
-            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder.Split('\\')[0]);
+        BG3SaveData saveData = new(savePath);
+        saveData.ParseSaveData();
+        if (saveData is null || saveData.GameId is null)
+            return;
+        if (currentNodePath.Contains(honourModeSuffix)) {
+            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, saveData.GameId.ToString() + honourModeSuffix);
+        }
         else
             targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder);
         Program.Watcher!.EnableRaisingEvents = false;
