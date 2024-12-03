@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BG3SaveBackup.Forms;
@@ -188,13 +189,12 @@ public partial class Display : Form {
         if (currentNodePath is null || currentNodeFolder is null)
             return;
         if (currentNodePath.Contains("_HonourMode"))
-            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder.Split('\\')[0]);
+            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, HonorModeSuffix().Match(currentNodePath).ToString());
         else
             targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder);
         Program.Watcher!.EnableRaisingEvents = false;
-        foreach (var file in new DirectoryInfo(targetPath).GetFiles()) {
+        foreach (var file in new DirectoryInfo(targetPath).GetFiles())
             file.Delete();
-        }
         foreach (var file in new DirectoryInfo(currentNodePath).GetFiles()) {
             using var backupSave = SafeFileHandle.WaitForFile(file.FullName);
             if (backupSave is null) continue;
@@ -209,4 +209,7 @@ public partial class Display : Form {
     private void RefreshNow_Click(object sender, EventArgs e) {
         RefreshTree();
     }
+
+    [GeneratedRegex(@"(?<=\\)[a-z].*?__HonourMode")]
+    private static partial Regex HonorModeSuffix();
 }
