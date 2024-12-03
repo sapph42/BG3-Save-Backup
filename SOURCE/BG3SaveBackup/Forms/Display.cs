@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace BG3SaveBackup.Forms;
@@ -185,27 +186,20 @@ public partial class Display : Form {
     }
     private void restoreBackupToolStripMenuItem_Click(object sender, EventArgs e) {
         string targetPath = "";
-        string honourModeSuffix = "__HonourMode";
-        string? savePath = Directory
-            .GetFiles(currentNodePath!)
-            .Where(f => f.EndsWith("lsv"))
-            .FirstOrDefault();
-        if (currentNodePath is null || currentNodeFolder is null || savePath is null)
+        var expression = new Regex(@"(?<=\\)[a-z].*?__HonourMode");
+        if (currentNodePath is null || currentNodeFolder is null)
             return;
-        BG3SaveData saveData = new(savePath);
-        saveData.ParseSaveData();
-        if (saveData is null || saveData.GameId is null)
-            return;
-        if (currentNodePath.Contains(honourModeSuffix)) {
-            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, saveData.GameId.ToString() + honourModeSuffix);
-        }
+        if (currentNodePath.Contains("_HonourMode"))
+            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, expression.Match(currentNodePath).ToString());
         else
             targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder);
         Program.Watcher!.EnableRaisingEvents = false;
-        foreach (var file in new DirectoryInfo(targetPath).GetFiles()) {
+        foreach (var file in new DirectoryInfo(targetPath).GetFiles())
+        {
             file.Delete();
         }
-        foreach (var file in new DirectoryInfo(currentNodePath).GetFiles()) {
+        foreach (var file in new DirectoryInfo(currentNodePath).GetFiles())
+        {
             using var backupSave = SafeFileHandle.WaitForFile(file.FullName);
             if (backupSave is null) continue;
             var saveName = file.Name;
