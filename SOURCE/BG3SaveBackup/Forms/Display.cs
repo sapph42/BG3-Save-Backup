@@ -188,13 +188,15 @@ public partial class Display : Form {
         string targetPath = "";
         if (currentNodePath is null || currentNodeFolder is null)
             return;
-        if (currentNodePath.Contains("_HonourMode"))
-            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, HonorModeSuffix().Match(currentNodePath).ToString());
+        var saveMatch = HonorModeSuffix().Match(currentNodePath);
+        if (saveMatch.Captures.Any())
+            targetPath = Path.Combine(Settings.Default.LarianSaveLoc, saveMatch.Groups["folder"].Value);
         else
             targetPath = Path.Combine(Settings.Default.LarianSaveLoc, currentNodeFolder);
         Program.Watcher!.EnableRaisingEvents = false;
         foreach (var file in new DirectoryInfo(targetPath).GetFiles())
             file.Delete();
+        Directory.CreateDirectory(targetPath);
         foreach (var file in new DirectoryInfo(currentNodePath).GetFiles()) {
             using var backupSave = SafeFileHandle.WaitForFile(file.FullName);
             if (backupSave is null) continue;
@@ -210,6 +212,6 @@ public partial class Display : Form {
         RefreshTree();
     }
 
-    [GeneratedRegex(@"(?<=\\)[a-z].*?__HonourMode")]
+    [GeneratedRegex(@"\\(?<folder>[^_\\]*?__HonourMode)")]
     private static partial Regex HonorModeSuffix();
 }

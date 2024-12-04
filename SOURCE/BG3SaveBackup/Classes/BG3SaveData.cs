@@ -94,10 +94,6 @@ internal partial class BG3SaveData {
 	[GeneratedRegex(@"\s<attribute id=""Difficulty"" type=""uint8"" value=""(?<diff>\d)"" />")]
 	private static partial Regex DiffRegex();
 	[GeneratedRegex(@"\s<attribute id=""TimeStamp"" type=""uint32"" value=""(?<ptime>\d*)"" />")]
-	private static partial Regex PlayTimeRegex();
-
-
-						
-					
+	private static partial Regex PlayTimeRegex();			
 }
 
