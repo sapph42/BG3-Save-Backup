@@ -42,6 +42,8 @@
             SaveTree = new TreeView();
             button1 = new Button();
             SaveDataTextbox = new TextBox();
+            processTimer = new System.Windows.Forms.Timer(components);
+            Kill9Bg3 = new Button();
             TrayMenu.SuspendLayout();
             BackupAction.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)ScreenshotImage).BeginInit();
@@ -196,11 +198,27 @@
             SaveDataTextbox.Size = new Size(400, 103);
             SaveDataTextbox.TabIndex = 13;
             // 
+            // processTimer
+            // 
+            processTimer.Interval = 30000;
+            processTimer.Tick += processTimer_Tick;
+            // 
+            // Kill9Bg3
+            // 
+            Kill9Bg3.Location = new Point(917, 101);
+            Kill9Bg3.Name = "Kill9Bg3";
+            Kill9Bg3.Size = new Size(149, 47);
+            Kill9Bg3.TabIndex = 14;
+            Kill9Bg3.Text = "kill -9 bg3";
+            Kill9Bg3.UseVisualStyleBackColor = true;
+            Kill9Bg3.Click += Kill9Bg3_Click;
+            // 
             // Display
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1078, 499);
+            Controls.Add(Kill9Bg3);
             Controls.Add(SaveDataTextbox);
             Controls.Add(button1);
             Controls.Add(SaveTree);
@@ -243,5 +261,7 @@
         private TreeView SaveTree;
         private Button button1;
         private TextBox SaveDataTextbox;
+        private System.Windows.Forms.Timer processTimer;
+        private Button Kill9Bg3;
     }
 }

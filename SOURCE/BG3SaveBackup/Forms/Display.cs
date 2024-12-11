@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -8,7 +9,6 @@ namespace BG3SaveBackup.Forms;
 public partial class Display : Form {
     private string? currentNodePath;
     private string? currentNodeFolder;
-    private TreeNode root = new(Settings.Default.BackupSaveLoc);
     public Display() {
         InitializeComponent();
         if (Program.Watcher is null)
@@ -23,6 +23,13 @@ public partial class Display : Form {
     }
     private void Status_Load(object sender, EventArgs e) {
         RefreshTree();
+        if (CheckForProcess() is null) {
+            Kill9Bg3.Visible = false;
+            return;
+        }
+        Kill9Bg3.Visible = true;
+        processTimer.Enabled = true;
+        processTimer.Start();
     }
     private void Status_Shown(object sender, EventArgs e) {
         RefreshTree();
@@ -214,4 +221,33 @@ public partial class Display : Form {
 
     [GeneratedRegex(@"\\(?<folder>[^_\\]*?__HonourMode)")]
     private static partial Regex HonorModeSuffix();
+
+    private void processTimer_Tick(object sender, EventArgs e) {
+        if (CheckForProcess() is null) {
+            Kill9Bg3.Visible = false;
+            return;
+        }
+        Kill9Bg3.Visible = true;
+    }
+    private int? CheckForProcess() {
+        var vulkanList = Process.GetProcessesByName("bg3");
+        var dx11List = Process.GetProcessesByName("bg3_dx11");
+        if ((vulkanList is null || vulkanList.Length == 0) && (dx11List is null || dx11List.Length == 0))
+            return null;
+        if (vulkanList is not null && vulkanList.Length > 0)
+            return vulkanList[0].Id;
+        return dx11List[0].Id;
+    }
+    private void Kill9Bg3_Click(object sender, EventArgs e) {
+        int? processId = CheckForProcess();
+        if (processId is null){
+            Kill9Bg3.Visible = false;
+            return;
+        }
+        Process BgProcess = Process.GetProcessById((int)processId);
+        Process? LlProcess = Process.GetProcessesByName("LariLauncher").FirstOrDefault();
+        LlProcess?.Kill();
+        BgProcess.Kill();
+        Kill9Bg3.Visible = false;
+    }
 }
